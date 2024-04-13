@@ -1,28 +1,30 @@
 import ballerina/http;
 import ballerina/log;
+import ballerinax/mysql;
+import ballerina/sql;
+import ballerinax/mysql.driver as _;
+
+configurable string db_host = ?;
+configurable int db_port = ?;
+configurable string db_user = ?;
+configurable string db_password = ?;
+configurable string db_database = ?;
 
 # A service representing a network-accessible API
 # bound to port `9090`.
 service / on new http:Listener(9090) {
 
+    private final mysql:Client db;
+
+    function init() returns error? {
+        self.db = check new (db_host, db_user, db_password, db_database, db_port);
+    }
     resource function get movies() returns Movie[]|error {
 
         log:printInfo("Get movie hit");
-        
-        Movie movie = {
-            id: "001",
-            title: "Civil War",
-            description: "In a dystopian future America, a team of military-embedded journalists races against time to reach Washington, D.C., before rebel factions descend upon the White House.",
-            image: "",
-            genre: "Action",
-            trailer: "https://www.youtube.com/watch?v=c2G18nIVpNE",
-            active: true,
-            releaseDate: "04/12/2024",
-            duration: 109
-        };
 
-        return [
-            movie
-        ];
+        stream<Movie, sql:Error?> movieStream = self.db->query(`SELECT * FROM Movie`);
+        return from Movie movie in movieStream select movie;
+
     }
 }
