@@ -1,3 +1,5 @@
+DROP DATABASE MovieTicketingSystem;
+
 CREATE DATABASE IF NOT EXISTS MovieTicketingSystem;
 
 USE MovieTicketingSystem;
@@ -64,6 +66,6 @@ CREATE TABLE IF NOT EXISTS Ticket (
     FOREIGN KEY (showTime) REFERENCES ShowTime(id)
 );
 
-INSERT INTO Movie VALUES ( "001", "Civil War", "In a dystopian future America, a team of military-embedded journalists races against time to reach Washington, D.C., before rebel factions descend upon the White House.", "", "Action", "https://www.youtube.com/watch?v=c2G18nIVpNE", true, "04/12/2024", 109);
-INSERT INTO Movie VALUES ( "002", "Godzilla x Kong: The New Empire", "The epic battle continues! Legendary Pictures’ cinematic Monsterverse follows up the explosive showdown of “Godzilla vs. Kong” with an all‐new adventure that pits the almighty Kong and the fearsome Godzilla against a colossal undiscovered threat hidden within our world, challenging their very existence—and our own. “Godzilla x Kong: The New Empire” delves further into the histories of these Titans and their origins, as well as the mysteries of Skull Island and beyond, while uncovering the mythic battle that helped forge these extraordinary beings and tied them to humankind forever.",
-    "", "Action", "https://www.youtube.com/watch?v=qqrpMRDuPfc", true, "03/29/2024", 115);
+INSERT INTO Movie VALUES ( '001', 'Civil War', 'In a dystopian future America, a team of military-embedded journalists races against time to reach Washington, D.C., before rebel factions descend upon the White House.', '', 'Action', 'https://www.youtube.com/watch?v=c2G18nIVpNE', true, '04/12/2024', 109);
+INSERT INTO Movie VALUES ( '002', 'Godzilla x Kong: The New Empire', 'The epic battle continues! Legendary Pictures’ cinematic Monsterverse follows up the explosive showdown of “Godzilla vs. Kong” with an all‐new adventure that pits the almighty Kong and the fearsome Godzilla against a colossal undiscovered threat hidden within our world, challenging their very existence—and our own. “Godzilla x Kong: The New Empire” delves further into the histories of these Titans and their origins, as well as the mysteries of Skull Island and beyond, while uncovering the mythic battle that helped forge these extraordinary beings and tied them to humankind forever.',
+    '', 'Action', 'https://www.youtube.com/watch?v=qqrpMRDuPfc', true, '03/29/2024', 115);

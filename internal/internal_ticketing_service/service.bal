@@ -8,7 +8,7 @@ configurable string db_host = ?;
 configurable int db_port = ?;
 configurable string db_user = ?;
 configurable string db_password = ?;
-configurable string db_database = ?;
+configurable string db_database = "MovieTicketingSystem";
 
 # A service representing a network-accessible API
 # bound to port `9090`.
