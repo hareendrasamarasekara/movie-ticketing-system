@@ -1,38 +1,28 @@
 import ballerina/http;
 import ballerina/log;
 
-type Payload record {
-    string user;
-    string impersonatee;
-    string application;
-};
-
 # A service representing a network-accessible API
 # bound to port `9090`.
 service / on new http:Listener(9090) {
 
-    resource function post canImpersonate(@http:Payload Payload payload) returns json|error {
+    resource function get movies() returns Movie[]|error {
 
-        log:printInfo("canImpersonate call received");
-
-        if payload.user is "" || payload.impersonatee is "" {
-            return {
-                status: 400,
-                message: "User and impersonatee should not be empty!"
-            };
-        }
-
-        var message = "Invalid";
-
-        if payload.user == "mark@kfone.com" && payload.impersonatee == "vihanga@wso2.com" {
-            message = "Valid";
-        }
-
-        log:printInfo("Returning status: " + message);
+        log:printInfo("Get movie hit");
         
-        return {
-            status: 200,
-            message: message
+        Movie movie = {
+            id: "001",
+            title: "Civil War",
+            description: "In a dystopian future America, a team of military-embedded journalists races against time to reach Washington, D.C., before rebel factions descend upon the White House.",
+            image: "",
+            genre: "Action",
+            trailer: "https://www.youtube.com/watch?v=c2G18nIVpNE",
+            active: true,
+            releaseDate: "04/12/2024",
+            duration: 109
         };
+
+        return [
+            movie
+        ];
     }
 }
