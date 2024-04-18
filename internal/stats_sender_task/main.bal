@@ -1,100 +1,67 @@
-import ballerina/http;
-import ballerina/io;
 import ballerina/log;
-import ballerina/time;
+import ballerinax/mysql;
+import ballerina/sql;
+import ballerinax/mysql.driver as _;
 
 import wso2/choreo.sendemail as ChoreoEmail;
 
-configurable string appointmentApiUrl = ?;
+configurable string db_host = ?;
+configurable int db_port = ?;
+configurable string db_user = ?;
+configurable string db_password = ?;
+configurable string db_database = "MovieTicketingSystem";
+configurable string email = ?;
 
-type Appointment record {
-    string appointmentDate;
-    string email;
-    int id;
-    string name;
-    string phoneNumber;
-    string 'service;
-};
+type Movie record {|
+    string id;
+    string title;
+    string description;
+    string image;
+    string genre;
+    string trailer;
+    boolean active;
+    string releaseDate;
+    int duration; // in minutes
+|};
 
 public function main() returns error? {
-    io:println("Appintment URL: " + appointmentApiUrl);
-    http:Client appointmentsApiEndpoint = check new (appointmentApiUrl);
 
-    // Fetching the appointments
-    Appointment[] appointments = check appointmentsApiEndpoint->/appointments(upcoming = "true");
+    Movie[] movies = check getMovies();
 
-    foreach Appointment appointment in appointments {
-        // Sending an email to the patient
-        check sendEmail(appointment);
-    }
+    check sendEmail(movies);
 }
 
-function sendEmail(Appointment appointment) returns error? {
+function getMovies() returns Movie[]|error {
 
-    // Format the date as "April 8, 2024, at 5:30 AM"
-    string formattedAppointmentDate = check getIstTimeString(appointment.appointmentDate);
+    log:printInfo("Getting all the movies.");
 
-    // Capitalize the service name
-    string serviceName = convertAndCapitalize(appointment.'service);
+    mysql:Client db = check new (db_host, db_user, db_password, db_database, db_port);
+    stream<Movie, sql:Error?> movieStream = db->query(`SELECT * FROM Movie`);
+    return from Movie movie in movieStream select movie;
+}
+
+function sendEmail(Movie[] movies) returns error? {
+
+    string movieList = "";
+    foreach Movie movie in movies {
+        movieList = movieList + "   - " + movie.title + "\n";
+    }
 
     // Appending branding details to the content
     string finalContent = string `
-Dear ${appointment.name},
+Hello,
 
-This is a reminder that you have an appointment scheduled for ${serviceName} at ${formattedAppointmentDate}.
+Please find the active list of movies below.
 
-Thank you for choosing CareConnect for your medical needs. We are here to assist you at every step of your health journey.
+${movieList}
 
 Warm regards,
-The CareConnect Team
+The Movie Ticketing Team
 
 ---
-
-CareConnect - Your Partner in Health
-
-Website: https://www.careconnect.com
-Support: support@careconnect.com
-Phone: +1 (800) 123-4567
-
-Follow us on:
-- Facebook: https://www.facebook.com/CareConnect
-- Twitter: https://twitter.com/CareConnect
-
-Privacy Policy | Terms of Use | Unsubscribe
-
-This message is intended only for the addressee and may contain confidential information. If you are not the intended recipient, you are hereby notified that any use, dissemination, copying, or storage of this message or its attachments is strictly prohibited.
 `;
 
     ChoreoEmail:Client emailClient = check new ();
-    string sendEmailResponse = check emailClient->sendEmail(appointment.email, "Upcoming Appointment Reminder", finalContent);
-    log:printInfo("Email sent successfully to: " + appointment.email + " with response: " + sendEmailResponse);
-}
-
-function getIstTimeString(string utcTimeString) returns string|error {
-    time:Utc utcTime = check time:utcFromString(utcTimeString);
-
-    time:TimeZone zone = check new ("Asia/Colombo");
-    time:Civil istTime = zone.utcToCivil(utcTime);
-
-    string emailFormattedString = check time:civilToEmailString(istTime, time:PREFER_TIME_ABBREV);
-    return emailFormattedString;
-}
-
-function convertAndCapitalize(string input) returns string {
-    string:RegExp r = re `-`;
-    // Split the input string by '-'
-    string[] parts = r.split(input);
-
-    // Capitalize the first letter of each part and join them with a space
-    string result = "";
-    foreach var word in parts {
-        string capitalizedWord = word.substring(0, 1).toUpperAscii() + word.substring(1).toLowerAscii();
-        if (result.length() > 0) {
-            result = result + " " + capitalizedWord;
-        } else {
-            result = capitalizedWord;
-        }
-    }
-
-    return result;
+    string sendEmailResponse = check emailClient->sendEmail(email, "Ticketing System Stats", finalContent);
+    log:printInfo("Email sent successfully to: " + email + " with response: " + sendEmailResponse);
 }
