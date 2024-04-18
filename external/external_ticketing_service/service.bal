@@ -18,6 +18,8 @@ service / on new http:Listener(9090) {
         log:printInfo("consumer_secret = " + consumer_secret);
         log:printInfo("service_url = " + service_url);
 
+        check getAccessToken();
+        
         http:Client c = check new (service_url,
             auth = {
                 tokenUrl: token_url,
@@ -33,4 +35,17 @@ service / on new http:Listener(9090) {
         return [];
 
     }
+}
+
+function getAccessToken() returns error? {
+
+    http:Client c = check new(token_url);
+
+    json response = check c->/.post({
+        grant_type: "client_credentials",
+        clientId: consumer_key,
+        clientSecret: consumer_secret
+    });
+
+    log:printInfo(response.toBalString());
 }
