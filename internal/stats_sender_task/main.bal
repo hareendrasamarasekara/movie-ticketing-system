@@ -1,16 +1,16 @@
-import ballerina/log;
-import ballerinax/mysql;
+import wso2/choreo.sendemail;
+import ballerina/io;
 import ballerina/sql;
+import ballerinax/mysql;
 import ballerinax/mysql.driver as _;
 
-import wso2/choreo.sendemail as ChoreoEmail;
-
-configurable string db_host = ?;
-configurable int db_port = ?;
-configurable string db_user = ?;
-configurable string db_password = ?;
-configurable string db_database = "MovieTicketingSystem";
+configurable string host = ?;
+configurable int port = ?;
+configurable string user = ?;
+configurable string password = ?;
+configurable string database = ?;
 configurable string email = ?;
+const emailSubject = "Movie Ticket Statistics";
 
 type Movie record {|
     string id;
@@ -24,30 +24,22 @@ type Movie record {|
     int duration; // in minutes
 |};
 
+// Create a new email client
+sendemail:Client emailClient = check new ();
+
 public function main() returns error? {
 
-    Movie[] movies = check getMovies();
+    final mysql:Client db;
+    db = check new (host, user, password, database, port);
 
-    check sendEmail(movies);
-}
-
-function getMovies() returns Movie[]|error {
-
-    log:printInfo("Getting all the movies.");
-
-    mysql:Client db = check new (db_host, db_user, db_password, db_database, db_port);
-    stream<Movie, sql:Error?> movieStream = db->query(`SELECT * FROM Movie`);
-    return from Movie movie in movieStream select movie;
-}
-
-function sendEmail(Movie[] movies) returns error? {
+    Movie[] movies = check getMovies(db);
+    io:println(movies);
 
     string movieList = "";
     foreach Movie movie in movies {
         movieList = movieList + "   - " + movie.title + "\n";
     }
 
-    // Appending branding details to the content
     string finalContent = string `
 Hello,
 
@@ -60,8 +52,13 @@ The Movie Ticketing Team
 
 ---
 `;
+    // Send the email
+    string _ = check emailClient->sendEmail(email, emailSubject, finalContent);
+    io:println("Successfully sent the email.");
+}
 
-    ChoreoEmail:Client emailClient = check new ();
-    string sendEmailResponse = check emailClient->sendEmail(email, "Ticketing System Stats", finalContent);
-    log:printInfo("Email sent successfully to: " + email + " with response: " + sendEmailResponse);
+function getMovies(mysql:Client db) returns Movie[]|error {
+
+    stream<Movie, sql:Error?> movieStream = db->query(`SELECT * FROM Movie`);
+    return from Movie movie in movieStream select movie;
 }
