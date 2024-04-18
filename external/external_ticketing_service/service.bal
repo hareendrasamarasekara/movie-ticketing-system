@@ -39,12 +39,21 @@ service / on new http:Listener(9090) {
 
 function getAccessToken() returns error? {
 
-    http:Client c = check new(token_url);
+    string input = consumer_key + ":" + consumer_secret;
+    byte[] inputArr = input.toBytes();
+    string credentials = inputArr.toBase64();
+
+    log:printInfo(credentials);
+
+    http:Client c = check new(token_url,
+        auth = {
+            username: consumer_key,
+            password: consumer_secret
+        }
+    );
 
     json response = check c->/.post({
-        grant_type: "client_credentials",
-        clientId: consumer_key,
-        clientSecret: consumer_secret
+        grant_type: "client_credentials"
     });
 
     log:printInfo(response.toBalString());
