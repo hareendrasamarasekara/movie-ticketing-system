@@ -13,6 +13,10 @@ service / on new http:Listener(9090) {
     resource function get movies() returns Movie[]|error {
 
         log:printInfo("Get movie external hit");
+        log:printInfo("token_url = " + token_url);
+        log:printInfo("consumer_key = " + consumer_key);
+        log:printInfo("consumer_secret = " + consumer_secret);
+        log:printInfo("service_url = " + service_url);
 
         http:Client c = check new (service_url,
             auth = {
