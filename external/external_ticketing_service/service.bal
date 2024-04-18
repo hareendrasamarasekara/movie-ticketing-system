@@ -1,10 +1,15 @@
 import ballerina/http;
 import ballerina/log;
+import ballerina/os;
 
-configurable string service_url = ?;
-configurable string consumer_key = ?;
-configurable string consumer_secret = ?;
-configurable string token_url = ?;
+// configurable string service_url = os:getEnv("SERVICE_URL");
+// configurable string consumer_key = os:getEnv("CONSUMER_KEY");
+// configurable string consumer_secret = os:getEnv("CONSUMER_SECRET");
+// configurable string token_url = os:getEnv("TOKEN_URL");
+string service_url = os:getEnv("SERVICE_URL");
+string consumer_key = os:getEnv("CONSUMER_KEY");
+string consumer_secret = os:getEnv("CONSUMER_SECRET");
+string token_url = os:getEnv("TOKEN_URL");
 
 # A service representing a network-accessible API
 # bound to port `9090`.

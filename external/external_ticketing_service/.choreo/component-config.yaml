@@ -1,0 +1,31 @@
+apiVersion: core.choreo.dev/v1beta1
+kind: ComponentConfig
+spec:
+  # +optional Incoming connection details for the component (AKA endpoints).
+  inbound:
+    # +required Unique name for the endpoint. (This name will be used when generating the managed API)
+    - name: movieTickets
+      # +required Numeric port value that gets exposed via the endpoint
+      port: 9090
+      # +required Type of traffic that the endpoint is accepting. For example: REST, GraphQL, etc.
+      # Allowed values: REST, GraphQL, GRPC, TCP, UDP.
+      type: REST
+      # +optional Network level visibility of the endpoint. Defaults to Public
+      # Accepted values: Project|Organization|Public.
+      networkVisibility: Public
+      # +optional Context (base path) of the API that gets exposed via the endpoint.
+      # This is mandatory if the endpoint type is set to REST or GraphQL.
+      context: /
+  outbound:
+    serviceReferences:
+    - name: choreo:///hareendra/internal/etuxvw/803f0/v1.0/ORGANIZATION
+      connectionConfig: 01eefd36-62a3-1626-adcd-a0fdcd646fd3
+      env:
+      - from: ServiceURL
+        to: SERVICE_URL
+      - from: ConsumerKey
+        to: CONSUMER_KEY
+      - from: ConsumerSecret
+        to: CONSUMER_SECRET
+      - from: TokenURL
+        to: TOKEN_URL
