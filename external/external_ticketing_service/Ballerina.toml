@@ -1,0 +1,8 @@
+[build-options]
+  observabilityIncluded = true
+
+[package]
+org = "hareendra"
+name = "external_ticketing_service"
+version = "0.1.0"
+distribution = "2201.8.6"
