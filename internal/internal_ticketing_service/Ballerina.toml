@@ -1,5 +1,5 @@
 [build-options]
-  observabilityIncluded = true
+observabilityIncluded = true
 
 [package]
 org = "hareendra"
