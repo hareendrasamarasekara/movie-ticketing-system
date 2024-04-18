@@ -12,38 +12,35 @@ service / on new http:Listener(9090) {
 
     resource function get movies() returns Movie[]|error {
 
-        log:printInfo("Get movie external hit");
+        log:printInfo("Get movie external hit...");
         log:printInfo("token_url = " + token_url);
         log:printInfo("consumer_key = " + consumer_key);
         log:printInfo("consumer_secret = " + consumer_secret);
         log:printInfo("service_url = " + service_url);
+        log:printInfo("=======================================");
 
-        check getAccessToken();
+        string access_token = check getAccessToken() ?: "";
+
+        if (access_token != "") {
+            http:Client c = check new (service_url,
+                auth = {
+                    token: access_token
+                }
+            );
+
+            json response = check c->get("/movies");
+
+            log:printInfo(response.toBalString());
+        } 
         
-        http:Client c = check new (service_url,
-            auth = {
-                tokenUrl: token_url,
-                clientId: consumer_key,
-                clientSecret: consumer_secret
-            }
-        );
-
-        json response = check c->get("/movies");
-
-        log:printInfo(response.toBalString());
-
         return [];
 
     }
 }
 
-function getAccessToken() returns error? {
+function getAccessToken() returns string|error? {
 
-    string input = consumer_key + ":" + consumer_secret;
-    byte[] inputArr = input.toBytes();
-    string credentials = inputArr.toBase64();
-
-    log:printInfo(credentials);
+    log:printInfo("Retriving access token...");
 
     http:Client c = check new(token_url,
         auth = {
@@ -57,4 +54,7 @@ function getAccessToken() returns error? {
     });
 
     log:printInfo(response.toBalString());
+    string access_token = check response.access_token;
+
+    return access_token;
 }
