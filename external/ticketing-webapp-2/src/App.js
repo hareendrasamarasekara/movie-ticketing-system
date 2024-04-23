@@ -5,6 +5,7 @@ import HomePage from './components/HomePage';
 import MovieDetailPage from './components/MovieDetailPage';
 import BookingPage from './components/BookingPage';
 import AuthPage from './components/AuthPage';
+import NewMoviePage from './components/NewMoviePage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/movies/:movieId" component={MovieDetailPage} />
         <Route path="/booking/:movieId" component={BookingPage} />
         <Route path="/auth" component={AuthPage} />
+        <Route path="/admin" component={NewMoviePage} />
       </Switch>
     </Router>
   );

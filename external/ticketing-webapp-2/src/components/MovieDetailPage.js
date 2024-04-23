@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 import '../styles/MovieDetailPage.css'; // Import CSS file for styling
+import Header from './Header';
 
 const MovieDetailPage = () => {
   const { movieId } = useParams();
@@ -30,6 +31,7 @@ const MovieDetailPage = () => {
 
   return (
     <div className="movie-detail-page">
+      <Header/>
       <h1>{movie.title}</h1>
       <div className="movie-details-container">
         <div className="movie-image">

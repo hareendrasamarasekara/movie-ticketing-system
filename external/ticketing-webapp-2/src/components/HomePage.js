@@ -1,7 +1,8 @@
-// HomePage.js
+// Header.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/HomePage.css'; // Import CSS file for styling
+import Header from './Header';
+import '../styles/HomePage.css';
 
 const HomePage = () => {
   const [movies, setMovies] = useState([]);
@@ -24,16 +25,20 @@ const HomePage = () => {
 
   return (
     <div>
-      <h1>Available Movies</h1>
-      <div className="movie-container">
-        {movies.map(movie => (
-          <div key={movie.id} className="movie-box">
-            <Link to={`/movies/${movie.id}`}>
-              <img src={movie.imageUrl} alt={movie.title} />
-              <p>{movie.title}</p>
-            </Link>
-          </div>
-        ))}
+      <Header />
+
+      <div className="main-content">
+        <h2>Available Movies</h2>
+        <div className="movie-container">
+          {movies.map(movie => (
+            <div key={movie.id} className="movie-box">
+              <Link to={`/movies/${movie.id}`}>
+                <img src={movie.imageUrl} alt={movie.title} />
+                <p>{movie.title}</p>
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
