@@ -8,7 +8,7 @@ configurable string host = ?;
 configurable int port = ?;
 configurable string user = ?;
 configurable string password = ?;
-configurable string database = ?;
+configurable string database = "MovieTicketingSystem";
 configurable string email = ?;
 const emailSubject = "Movie Ticket Statistics";
 
