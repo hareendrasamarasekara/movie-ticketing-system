@@ -3,9 +3,9 @@ type Movie record {|
     string id;
     string title;
     string description;
-    string image;
+    string imageUrl;
     string genre;
-    string trailer;
+    string trailerUrl;
     boolean active;
     string releaseDate;
     int duration; // in minutes

@@ -33,13 +33,16 @@ service / on new http:Listener(9090) {
                 }
             );
 
-            json response = check c->get("/movies");
+            json response = check c->get("/movie");
 
             log:printInfo(response.toBalString());
-        } 
+
+            // Movie[] movies = check response.cloneWithType(Movie[]);
+        } else {
+            log:printError("Could not retrive access token!");
+        }
         
         return [];
-
     }
 }
 
