@@ -6,13 +6,15 @@ import '../styles/HomePage.css'; // Import CSS file for styling
 const HomePage = () => {
   const [movies, setMovies] = useState([]);
 
+  const serviceURL = window?.configs?.serviceURL ? window.configs.serviceURL : "/";
+
   useEffect(() => {
     fetchMovies();
   }, []);
 
   const fetchMovies = async () => {
     try {
-      const response = await fetch(window.config.serviceUrl + '/movie');
+      const response = await fetch(serviceURL + '/movie');
       const data = await response.json();
       setMovies(data);
     } catch (error) {

@@ -8,13 +8,15 @@ const MovieDetailPage = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
 
+  const serviceURL = window?.configs?.serviceURL ? window.configs.serviceURL : "/";
+
   useEffect(() => {
     fetchMovie();
   }, [movieId]);
 
   const fetchMovie = async () => {
     try {
-      const response = await fetch(window.config.serviceUrl + `/movie/${movieId}`);
+      const response = await fetch(serviceURL + `/movie/${movieId}`);
       const data = await response.json();
       setMovie(data);
     } catch (error) {
