@@ -1,0 +1,129 @@
+openapi: 3.0.0
+info:
+  description: |
+    This is a sample movie ticket booking API
+  version: "1.0.0"
+  title: Movie Ticket Booking API
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+
+paths:
+  /movie:
+    post:
+      summary: Add a new movie
+      operationId: addMovie
+      responses:
+        '405':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/Movie'
+    put:
+      summary: Update an existing movie
+      operationId: updateMovie
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Movie not found
+        '405':
+          description: Validation exception
+      requestBody:
+        $ref: '#/components/requestBodies/Movie'
+    get:
+      summary: Get all Movies
+      operationId: getMovies
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+        '400':
+          description: Invalid status value
+  '/movie/{movieId}':
+    get:
+      summary: Find movie by ID
+      description: Returns a single movie
+      operationId: getMovieById
+      parameters:
+        - name: movieId
+          in: path
+          description: ID of the movie to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Movie not found
+
+components:
+  schemas:
+    Movie:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10002
+        title:
+          type: string
+          example: 'Iron Man'
+        description:
+          type: string
+          example: 'A billionaire industrialist and genius inventor, Tony Stark (Robert Downey Jr.), is conducting weapons tests overseas, but terrorists kidnap him to force him to build a devastating weapon. Instead, he builds an armored suit and upends his captors.'
+        imageUrl:
+          type: string
+          example: 'https://m.media-amazon.com/images/I/61kVKNYa8cL._AC_UF894,1000_QL80_DpWeblab_.jpg'
+        genre:
+          type: string
+          example: 'Action,Sci-Fi'
+        trailerUrl:
+          type: string
+          example: 'https://www.youtube.com/watch?v=8ugaeA-nMTc'
+        active:
+          type: boolean
+          example: true
+        releaseDate:
+          type: string
+          example: '05/02/2008'
+        duration:
+          type: integer
+          format: int64
+          example: 126
+      xml:
+        name: Movie
+  requestBodies:
+    Movie:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Movie'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Movie'
+      description: Movie object that needs to be added
+      required: true
