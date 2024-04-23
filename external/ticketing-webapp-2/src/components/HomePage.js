@@ -12,7 +12,7 @@ const HomePage = () => {
 
   const fetchMovies = async () => {
     try {
-      const response = await fetch('http://localhost:9090/movie');
+      const response = await fetch(window.config.serviceUrl + '/movie');
       const data = await response.json();
       setMovies(data);
     } catch (error) {

@@ -14,7 +14,7 @@ const MovieDetailPage = () => {
 
   const fetchMovie = async () => {
     try {
-      const response = await fetch(`http://localhost:9090/movie/${movieId}`);
+      const response = await fetch(window.config.serviceUrl + `/movie/${movieId}`);
       const data = await response.json();
       setMovie(data);
     } catch (error) {
