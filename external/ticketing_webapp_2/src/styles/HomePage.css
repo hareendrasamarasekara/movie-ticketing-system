@@ -1,0 +1,22 @@
+/* HomePage.css */
+.movie-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .movie-box {
+    width: calc(25% - 20px); /* Adjust width as needed */
+    margin-bottom: 20px;
+  }
+  
+  .movie-box img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .movie-box p {
+    margin-top: 10px;
+    text-align: center;
+  }
+  

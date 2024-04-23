@@ -1,0 +1,31 @@
+/* MovieDetailPage.css */
+.movie-detail-page {
+    padding: 20px;
+  }
+  
+  .movie-details-container {
+    display: flex;
+  }
+  
+  .movie-image {
+    flex: 1 0 30%; /* Flex-grow: 1, Flex-shrink: 0, Flex-basis: 30% */
+    margin-right: 20px;
+  }
+  
+  .movie-image img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .trailer {
+    flex: 1 0 70%; /* Flex-grow: 1, Flex-shrink: 0, Flex-basis: 70% */
+  }
+  
+  .trailer .react-player {
+    width: 100%;
+  }
+  
+  .description {
+    margin-top: 20px;
+  }
+  
